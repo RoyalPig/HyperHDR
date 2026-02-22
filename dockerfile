@@ -10,9 +10,10 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
 # ----------------------------
-# Install dependencies
+# Install all dependencies
 # ----------------------------
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     git \
@@ -36,7 +37,8 @@ RUN apt-get install -y --no-install-recommends \
     qttools5-dev-tools \
     libqt5core5a \
     libqt5gui5 \
-    libqt5widgets5
+    libqt5widgets5 \
+    && rm -rf /var/lib/apt/lists/*
 
 # ----------------------------
 # Create non-root user
@@ -45,7 +47,7 @@ RUN useradd -m hyperhdr
 WORKDIR /home/hyperhdr
 
 # ----------------------------
-# Copy HyperHDR source code into the container
+# Copy HyperHDR source code into container
 # ----------------------------
 COPY . .
 
@@ -57,7 +59,7 @@ RUN mkdir build && cd build && \
     make -j$(nproc)
 
 # ----------------------------
-# Expose ports used by HyperHDR
+# Expose HyperHDR ports
 # ----------------------------
 EXPOSE 8090 8092 19444 19445 19400
 
