@@ -31,6 +31,12 @@ RUN apt-get update && \
     curl \
     wget \
     ca-certificates \
+    libssl-dev \
+    qt5-default \
+    qtbase5-dev \
+    libqt5core5a \
+    libqt5gui5 \
+    libqt5widgets5 \
     && rm -rf /var/lib/apt/lists/*
 
 # ----------------------------
