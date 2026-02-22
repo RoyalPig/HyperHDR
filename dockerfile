@@ -12,10 +12,9 @@ ENV LC_ALL=C.UTF-8
 # ----------------------------
 # Install dependencies
 # ----------------------------
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
+    build-essential \
     cmake \
-    g++ \
     git \
     libavcodec-dev \
     libavformat-dev \
@@ -37,8 +36,7 @@ RUN apt-get update && \
     qttools5-dev-tools \
     libqt5core5a \
     libqt5gui5 \
-    libqt5widgets5 \
-    && rm -rf /var/lib/apt/lists/*
+    libqt5widgets5
 
 # ----------------------------
 # Create non-root user
