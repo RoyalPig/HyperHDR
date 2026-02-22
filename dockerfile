@@ -39,6 +39,7 @@ RUN apt-get update && \
     libqt5gui5 \
     libqt5widgets5 \
     libqt5serialport5-dev \
+    libturbojpeg0-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # ----------------------------
