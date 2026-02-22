@@ -31,7 +31,7 @@ RUN apt-get update && \
     curl \
     wget \
     ca-certificates \
-    && rm -rf /var/lib/apt/lists/
+    && rm -rf /var/lib/apt/lists/*
 
 # ----------------------------
 # Create non-root user
