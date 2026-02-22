@@ -27,6 +27,7 @@ RUN git submodule update --init --recursive
 # Build HyperHDR
 RUN mkdir build && cd build && \
     cmake .. \
+      -DCMAKE_INSTALL_PREFIX=/opt/hyperhdr \
       -DUSE_SYSTEM_FLATBUFFERS_LIBS=ON \
       -DUSE_SYSTEM_ZSTD_LIBS=ON && \
     make -j$(nproc) && \
@@ -39,7 +40,7 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install runtime dependencies
+# Runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     qtbase5-dev libqt5serialport5-dev libqt5sql5-sqlite libqt5svg5-dev \
     libqt5x11extras5-dev libusb-1.0-0-dev libcec-dev \
@@ -48,12 +49,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libasound2-dev ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy HyperHDR binaries and shared files from build stage
-COPY --from=builder /usr/local/bin/HyperHDR /usr/local/bin/HyperHDR
-COPY --from=builder /usr/local/share/HyperHDR /usr/local/share/HyperHDR
-
-# Set working directory for config / volume mapping
+# Set working directory for configs / persistent data
 WORKDIR /config
+
+# Copy HyperHDR from build stage
+COPY --from=builder /opt/hyperhdr /opt/hyperhdr
+ENV PATH="/opt/hyperhdr/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/opt/hyperhdr/lib:${LD_LIBRARY_PATH}"
 
 # Expose ports
 EXPOSE 8090 19444 19445
