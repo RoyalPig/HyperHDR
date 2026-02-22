@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Clone your fork and init submodules
 WORKDIR /src
-RUN git clone --recursive https://github.com/YOURUSERNAME/HyperHDR.git .
+RUN git clone --recursive https://github.com/RoyalPig/HyperHDR.git .
 RUN git submodule update --init --recursive
 
 # Create build directory
