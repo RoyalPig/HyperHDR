@@ -1,78 +1,20 @@
-# Use Debian slim for a small, stable base
-FROM debian:stable-slim
+FROM ubuntu:23.10 as build
 
-# ----------------------------
-# Environment variables
-# ----------------------------
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ="America/Halifax"
-ENV LANG=C.UTF-8
-ENV LC_ALL=C.UTF-8
-
-# ----------------------------
-# Install dependencies
-# ----------------------------
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    cmake \
-    g++ \
-    git \
-    libavcodec-dev \
-    libavformat-dev \
-    libavutil-dev \
-    libswscale-dev \
-    libudev-dev \
-    libx11-dev \
-    libxext-dev \
-    libxrandr-dev \
-    libv4l-dev \
-    libusb-1.0-0-dev \
-    pkg-config \
-    curl \
-    wget \
-    ca-certificates \
-    libssl-dev \
-    qt5-default \
-    qtbase5-dev \
-    libqt5core5a \
-    libqt5gui5 \
-    libqt5widgets5 \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends git cmake build-essential \
+    libasound2-dev qtbase5-dev libqt5serialport5-dev libqt5sql5-sqlite libqt5svg5-dev libqt5x11extras5-dev libusb-1.0-0-dev \
+    python3-minimal rpm libcec-dev libxcb-image0-dev libxcb-util0-dev libxcb-shm0-dev libglvnd-dev \
+    libxcb-render0-dev libxcb-randr0-dev libxrandr-dev libxrender-dev libavahi-core-dev libavahi-compat-libdnssd-dev \
+    libjpeg-dev libturbojpeg0-dev libssl-dev zlib1g-dev ca-certificates curl wget dialog apt-utils \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# ----------------------------
-# Create non-root user
-# ----------------------------
-RUN useradd -m hyperhdr
-WORKDIR /home/hyperhdr
+COPY HyperHDR-*.deb /tmp/HyperHDR.deb
+RUN apt-get install -y /tmp/HyperHDR.deb
 
-# ----------------------------
-# Copy HyperHDR source
-# ----------------------------
-COPY . .
+RUN rm /tmp/HyperHDR.deb
 
-# ----------------------------
-# Build HyperHDR
-# ----------------------------
-RUN mkdir build && cd build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release && \
-    make -j$(nproc)
+EXPOSE 8090 19444 19445
 
-# ----------------------------
-# Expose the ports HyperHDR uses
-# ----------------------------
-EXPOSE 8090 8092 19444 19445 19400 19445
+RUN echo 'Running webUI on port 8090. Port 19444-19445 exposed for json, protobuffer server (hyperion-screen-cap).'
 
-# ----------------------------
-# Volume for persistent config
-# ----------------------------
-VOLUME ["/config"]
-
-# ----------------------------
-# Switch to non-root user
-# ----------------------------
-USER hyperhdr
-
-# ----------------------------
-# Start HyperHDR
-# ----------------------------
-CMD ["./build/hyperhdrd", "-p", "/config"]
+CMD ["hyperhdr"]
