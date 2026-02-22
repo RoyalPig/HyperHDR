@@ -32,8 +32,9 @@ RUN apt-get update && \
     wget \
     ca-certificates \
     libssl-dev \
-    qt5-default \
     qtbase5-dev \
+    qttools5-dev \
+    qttools5-dev-tools \
     libqt5core5a \
     libqt5gui5 \
     libqt5widgets5 \
