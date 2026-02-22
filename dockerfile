@@ -1,7 +1,7 @@
 # =========================
 # Stage 1: Build HyperHDR
 # =========================
-FROM ubuntu:23.10 AS builder
+FROM ubuntu:22.04 AS builder
 
 # Install build dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -25,7 +25,7 @@ RUN mkdir build && cd build && \
 # =========================
 # Stage 2: Minimal runtime
 # =========================
-FROM ubuntu:23.10
+FROM ubuntu:22.04
 
 # Install runtime dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
